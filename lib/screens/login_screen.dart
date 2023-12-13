@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttergram/resources/auth_methods.dart';
 import 'package:fluttergram/utils/colors.dart';
+import 'package:fluttergram/utils/utils.dart';
 import 'package:fluttergram/widgets/text_input_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,6 +15,23 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  void signinUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().signinUser(
+        email: _emailController.text, password: _passwordController.text);
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (res != 'success') {
+      showSnackBar(context, res);
+    }
+  }
 
   @override
   void dispose() {
@@ -58,19 +77,23 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               // login button
               InkWell(
+                onTap: signinUser,
                 child: Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: const ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(4),
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: const ShapeDecoration(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(4),
+                          ),
                         ),
-                      ),
-                      color: blueColor),
-                  child: const Text('Sign in'),
-                ),
+                        color: blueColor),
+                    child: _isLoading
+                        ? const Center(
+                            child:
+                                CircularProgressIndicator(color: primaryColor))
+                        : const Text('Sign in')),
               ),
               const SizedBox(
                 height: 12,
