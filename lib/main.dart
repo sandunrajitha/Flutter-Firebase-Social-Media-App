@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttergram/screens/login_screen.dart';
+import 'package:fluttergram/screens/signup_screen.dart';
 import 'package:fluttergram/utils/colors.dart';
 import 'firebase_options.dart';
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       //   webScreenLayout: WebScreenLayout(),
       //   mobileScreenLayout: MobileScreenLayout(),
       // ),
-      home: LoginScreen(),
+      home: SignupScreen(),
     );
   }
 }
