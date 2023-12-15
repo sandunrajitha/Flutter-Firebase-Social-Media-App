@@ -3,6 +3,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttergram/resources/auth_methods.dart';
+import 'package:fluttergram/responsive/mobile_screen_layout.dart';
+import 'package:fluttergram/responsive/responsive_screen_layout.dart';
+import 'package:fluttergram/responsive/web_screen_layout.dart';
+import 'package:fluttergram/screens/login_screen.dart';
 import 'package:fluttergram/utils/colors.dart';
 import 'package:fluttergram/utils/utils.dart';
 import 'package:fluttergram/widgets/text_input_field.dart';
@@ -56,8 +60,29 @@ class _SignupScreenState extends State<SignupScreen> {
     });
 
     if (res != 'success') {
-      showSnackBar(context, res);
+      if (context.mounted) {
+        showSnackBar(context, res);
+      }
+    } else {
+      if (context.mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const ResponsiveLayout(
+              webScreenLayout: WebScreenLayout(),
+              mobileScreenLayout: MobileScreenLayout(),
+            ),
+          ),
+        );
+      }
     }
+  }
+
+  void navigateToSignin() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
+    );
   }
 
   @override
@@ -170,10 +195,10 @@ class _SignupScreenState extends State<SignupScreen> {
                     padding: const EdgeInsets.symmetric(
                       vertical: 8,
                     ),
-                    child: const Text('Already have an account?'),
+                    child: const Text('Already have an account? '),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: navigateToSignin,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         vertical: 8,
