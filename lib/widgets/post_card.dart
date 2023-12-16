@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttergram/utils/colors.dart';
+import 'package:intl/intl.dart';
 
 class PostCard extends StatelessWidget {
-  const PostCard({super.key});
+  final snap;
+  const PostCard({super.key, required this.snap});
 
   @override
   Widget build(BuildContext context) {
@@ -21,18 +23,19 @@ class PostCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 16,
                   backgroundImage: NetworkImage(
-                      'https://firebasestorage.googleapis.com/v0/b/flutter-firebase-sm-app.appspot.com/o/profilePics%2F0dUbLk1dnaV5SZxOjcF2PDo4vas1?alt=media&token=1dcf80e2-206c-461d-8a6b-336e31e618c0'),
+                    snap['profImage'],
+                  ),
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.only(left: 8),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'username',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          snap['username'],
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -79,7 +82,7 @@ class PostCard extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.35,
             width: double.infinity,
             child: Image.network(
-              'https://firebasestorage.googleapis.com/v0/b/flutter-firebase-sm-app.appspot.com/o/posts%2FGqDbB9KeqfdRfPllmfSMHwTE7Bn2%2F00fbefe0-bd37-1dff-a2de-7db620e38bb1?alt=media&token=f62dfdd4-4075-4b16-bead-e2a090784615',
+              snap['postUrl'],
               fit: BoxFit.cover,
             ),
           ),
@@ -125,7 +128,7 @@ class PostCard extends StatelessWidget {
                       .titleSmall!
                       .copyWith(fontWeight: FontWeight.w800),
                   child: Text(
-                    '4700 likes',
+                    '${snap['likes'].length}',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
@@ -135,19 +138,19 @@ class PostCard extends StatelessWidget {
                     top: 8,
                   ),
                   child: RichText(
-                    text: const TextSpan(
-                      style: TextStyle(
+                    text: TextSpan(
+                      style: const TextStyle(
                         color: primaryColor,
                       ),
                       children: [
                         TextSpan(
-                          text: 'username',
-                          style: TextStyle(
+                          text: snap['username'],
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextSpan(
-                          text: '  This is a sample description for the post',
+                          text: ' ${snap['description']}',
                         ),
                       ],
                     ),
@@ -159,9 +162,9 @@ class PostCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                       vertical: 4,
                     ),
-                    child: Text(
+                    child: const Text(
                       'View all 85 comments',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         color: secondaryColor,
                       ),
@@ -173,7 +176,7 @@ class PostCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   child: Text(
-                    '17/12/2023',
+                    DateFormat.yMMMd().format(snap['datePublished'].toDate()),
                     style: const TextStyle(
                       fontSize: 12,
                       color: secondaryColor,
