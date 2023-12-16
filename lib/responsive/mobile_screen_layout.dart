@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttergram/models/user.dart' as models;
 import 'package:fluttergram/providers/user_provider.dart';
 import 'package:fluttergram/utils/colors.dart';
+import 'package:fluttergram/utils/global_variables.dart';
 import 'package:provider/provider.dart';
 
 class MobileScreenLayout extends StatefulWidget {
@@ -44,13 +45,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
 
     return Scaffold(
       body: PageView(
-        children: [
-          Text('home'),
-          Text('search'),
-          Text('add post'),
-          Text('favorite'),
-          Text('profile'),
-        ],
+        children: homeScreenItems,
         controller: pageController,
         onPageChanged: onPageChanged,
         physics: const NeverScrollableScrollPhysics(),
