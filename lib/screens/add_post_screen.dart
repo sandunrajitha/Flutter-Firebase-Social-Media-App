@@ -31,7 +31,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
               backgroundColor: mobileBackgroundColor,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () {},
+                onPressed: (() => clearPostData()),
               ),
               title: const Text(
                 'Post to',
@@ -56,6 +56,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
             body: Column(
               children: [
+                _isLoading
+                    ? const LinearProgressIndicator(
+                        color: Colors.blueAccent,
+                      )
+                    : const Padding(
+                        padding: EdgeInsets.only(top: 0),
+                      ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,6 +162,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
     String profImage,
   ) async {
     try {
+      setState(() {
+        _isLoading = true;
+      });
+
       String res = await FirestoreMethods().uploadPost(
         _file!,
         _descriptionController.text,
@@ -163,8 +174,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
         profImage,
       );
 
+      setState(() {
+        _isLoading = false;
+      });
+
       if (context.mounted) {
         if (res == 'success') {
+          clearPostData();
           showSnackBar(context, 'Posted!');
         } else {
           showSnackBar(context, res);
@@ -175,5 +191,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
         showSnackBar(context, err.toString());
       }
     }
+  }
+
+  void clearPostData() {
+    setState(() {
+      _file = null;
+    });
   }
 }
