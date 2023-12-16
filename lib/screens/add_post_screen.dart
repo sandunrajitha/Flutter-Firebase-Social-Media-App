@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:fluttergram/models/user.dart' as models;
 import 'package:fluttergram/providers/user_provider.dart';
+import 'package:fluttergram/resources/firestore_methods.dart';
 import 'package:fluttergram/utils/colors.dart';
 import 'package:fluttergram/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,11 +18,12 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
+  final TextEditingController _descriptionController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     final models.User user = Provider.of<UserProvider>(context).getUser!;
-    final TextEditingController _descriptionController = TextEditingController();
 
     return _file != null
         ? Scaffold(
@@ -39,7 +41,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
               centerTitle: false,
               actions: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () =>
+                      postImage(user.uid, user.username, user.profilePicUrl),
                   child: const Text(
                     'Post',
                     style: TextStyle(
@@ -138,5 +141,39 @@ class _AddPostScreenState extends State<AddPostScreen> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _descriptionController.dispose();
+  }
+
+  void postImage(
+    String uid,
+    String username,
+    String profImage,
+  ) async {
+    try {
+      String res = await FirestoreMethods().uploadPost(
+        _file!,
+        _descriptionController.text,
+        uid,
+        username,
+        profImage,
+      );
+
+      if (context.mounted) {
+        if (res == 'success') {
+          showSnackBar(context, 'Posted!');
+        } else {
+          showSnackBar(context, res);
+        }
+      }
+    } catch (err) {
+      if (context.mounted) {
+        showSnackBar(context, err.toString());
+      }
+    }
   }
 }
